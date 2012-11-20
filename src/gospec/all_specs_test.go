@@ -6,8 +6,17 @@ package gospec
 
 import (
 	"github.com/orfjackal/nanospec.go/src/nanospec"
+	"reflect"
 	"testing"
 )
+
+type PackagePath string
+
+var pkgPath PackagePath
+
+func init() {
+	pkgPath = PackagePath(reflect.ValueOf(pkgPath).Type().PkgPath())
+}
 
 func TestAllSpecs(t *testing.T) {
 	nanospec.Run(t, ConcurrencySpec)

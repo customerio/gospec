@@ -5,6 +5,7 @@
 package gospec
 
 import (
+	"fmt"
 	"github.com/orfjackal/nanospec.go/src/nanospec"
 )
 
@@ -15,7 +16,7 @@ func boom1() {
 	boom0()
 }
 func boom0() {
-	panic("boom!") // line 18
+	panic("boom!") // line 19
 }
 func noBoom() {
 }
@@ -29,18 +30,18 @@ func RecoverSpec(c nanospec.Context) {
 			c.Expect(err.Cause).Equals("boom!")
 		})
 		c.Specify("the stack trace begins with the panicking line", func() {
-			c.Expect(err.StackTrace[0].Name()).Equals("gospec.boom0")
+			c.Expect(err.StackTrace[0].Name()).Equals(fmt.Sprintf("%v.boom0", pkgPath))
 		})
 		c.Specify("the stack trace includes all parent functions", func() {
-			c.Expect(err.StackTrace[1].Name()).Equals("gospec.boom1")
+			c.Expect(err.StackTrace[1].Name()).Equals(fmt.Sprintf("%v.boom1", pkgPath))
 		})
 		c.Specify("the stack trace ends with the called function", func() {
 			lastEntry := err.StackTrace[len(err.StackTrace)-1]
-			c.Expect(lastEntry.Name()).Equals("gospec.boom2")
+			c.Expect(lastEntry.Name()).Equals(fmt.Sprintf("%v.boom2", pkgPath))
 		})
 		c.Specify("the stack trace line numbers are the line of the call; not where the call will return", func() {
 			// For an explanation, see the comments at http://code.google.com/p/go/issues/detail?id=1100
-			c.Expect(err.StackTrace[0].Line()).Equals(18)
+			c.Expect(err.StackTrace[0].Line()).Equals(19)
 		})
 	})
 

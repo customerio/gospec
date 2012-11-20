@@ -5,6 +5,7 @@
 package gospec
 
 import (
+	"fmt"
 	"github.com/orfjackal/nanospec.go/src/nanospec"
 )
 
@@ -47,7 +48,7 @@ func ContextSpec(c nanospec.Context) {
 
 		runCounts := countSpecNames(r.executed)
 		c.Expect(len(runCounts)).Equals(3)
-		c.Expect(runCounts["gospec.DummySpecWithTwoChildren"]).Equals(2)
+		c.Expect(runCounts[fmt.Sprintf("%v.DummySpecWithTwoChildren", pkgPath)]).Equals(2)
 		c.Expect(runCounts["Child A"]).Equals(1)
 		c.Expect(runCounts["Child B"]).Equals(1)
 	})
@@ -59,7 +60,7 @@ func ContextSpec(c nanospec.Context) {
 		r.Run()
 
 		runCounts := countSpecNames(r.executed)
-		c.Expect(runCounts["gospec.DummySpecWithOneChild"]).Equals(1)
-		c.Expect(runCounts["gospec.DummySpecWithTwoChildren"]).Equals(2)
+		c.Expect(runCounts[fmt.Sprintf("%v.DummySpecWithOneChild", pkgPath)]).Equals(1)
+		c.Expect(runCounts[fmt.Sprintf("%v.DummySpecWithTwoChildren", pkgPath)]).Equals(2)
 	})
 }

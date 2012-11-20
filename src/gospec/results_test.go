@@ -7,6 +7,7 @@ package gospec
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"github.com/orfjackal/nanospec.go/src/nanospec"
 	"strings"
 )
@@ -109,8 +110,8 @@ func ResultsSpec(c nanospec.Context) {
 		runner := NewRunner()
 		runner.AddSpec(DummySpecWithMultipleNestedChildren)
 		runner.Run()
-		c.Expect(runner.Results()).Matches(ReportIs(`
-- gospec.DummySpecWithMultipleNestedChildren
+		c.Expect(runner.Results()).Matches(ReportIs(fmt.Sprintf(`
+- %v.DummySpecWithMultipleNestedChildren
   - Child A
     - Child AA
     - Child AB
@@ -120,7 +121,7 @@ func ResultsSpec(c nanospec.Context) {
     - Child BC
 
 8 specs, 0 failures
-`))
+`, pkgPath)))
 	})
 
 	c.Specify("When specs fail", func() {
