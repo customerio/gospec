@@ -15,6 +15,8 @@ type Runner struct {
 	executed     []*specRun
 	scheduled    []*scheduledTask
 	Parallel     bool
+	BeforeEach   func()
+	AfterEach    func()
 }
 
 func NewRunner() *Runner {
@@ -52,9 +54,17 @@ func (r *Runner) Run() {
 
 func (r *Runner) startAllScheduledTasks() {
 	for r.hasScheduledTasks() {
+		if r.BeforeEach != nil {
+			r.BeforeEach()
+		}
+
 		r.startNextScheduledTask()
 		if !r.Parallel {
 			r.processNextFinishedTask()
+
+			if r.AfterEach != nil {
+				r.AfterEach()
+			}
 		}
 	}
 }
